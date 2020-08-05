@@ -9,8 +9,6 @@ export default (reducer, actions, initalState) => {
     // actions === {addBlog, editBlog etc}
     const boundActions = {};
     for (let key in actions){
-      console.log(key,'key')
-      console.log(actions, 'action')
       boundActions[key] = actions[key](dispatch)
     }
 
