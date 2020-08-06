@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { StyleSheet, Text, View, Button, ScrollView } from "react-native";
 import { Context } from "../context/BlogContext";
 import { FlatList, TouchableOpacity } from "react-native-gesture-handler";
@@ -8,8 +8,27 @@ import { Ionicons } from '@expo/vector-icons';
 
 const IndexScreen = (props) => {
   const context = useContext(Context);
-  const { state, addRandomBlog, deleteBlog } = context;
+  const { state, addRandomBlog, deleteBlog, getBlogPosts } = context;
 
+  useEffect(() => {
+    getBlogPosts()
+
+    //add listener to rerun when page is "focused"
+    const listener = props.navigation.addListener('didFocus', () =>{
+      getBlogPosts()
+    })
+
+    return ()=>{
+      listener.remove();
+    }
+
+  }, [])
+
+  const handleAddRandom = async (state)=>{
+    await addRandomBlog(state)
+    getBlogPosts()
+
+  }
 
   const renderListItem = (item) => {
     return (
@@ -23,7 +42,7 @@ const IndexScreen = (props) => {
         </TouchableOpacity>
 
         <TouchableOpacity onPress={() => deleteBlog(item.id)}>
-          <Foundation name="trash" size={24} color="black" />
+          <Foundation style={styles.trashIcon} name="trash" size={24} color="black" />
         </TouchableOpacity>
       </View>
     );
@@ -32,7 +51,7 @@ const IndexScreen = (props) => {
   return (
     <View>
       <Text>Index Screen</Text>
-      <Button title="Add Random Blog" onPress={addRandomBlog} />
+      <Button title="Add Random Blog" onPress={()=>handleAddRandom(state)} />
       <FlatList
         data={state}
         keyExtractor={(blogPost) => blogPost.id}
@@ -57,8 +76,9 @@ IndexScreen.navigationOptions =(props)=>{
 const styles = StyleSheet.create({
   listContainer: {
     flexDirection: "row",
-    justifyContent: "space-around",
+    justifyContent: "space-between",
     paddingVertical: 5,
+    marginHorizontal: 25,
   },
   text: {
     alignSelf: "center",
@@ -66,6 +86,9 @@ const styles = StyleSheet.create({
   },
   headerIcon:{
     marginRight:30
+  },
+  trashIcon:{
+    // alignSelf:"flex-end",
   }
 });
 export default IndexScreen;
