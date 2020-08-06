@@ -1,6 +1,7 @@
 import React, { useContext } from "react";
-import { StyleSheet, Text, View, Button, ScrollView } from "react-native";
+import { StyleSheet, Text, View, Button, ScrollView, TouchableOpacity } from "react-native";
 import { Context } from "../context/BlogContext";
+import { FontAwesome } from '@expo/vector-icons'; 
 
 const BlogScreen = ({ navigation }) => {
   const id = navigation.getParam("id");
@@ -16,11 +17,28 @@ const BlogScreen = ({ navigation }) => {
     <View>
       <Text>Blog Screen</Text>
       <Text>{activeBlog[0].title}</Text>
+      <Text>{activeBlog[0].content}</Text>
     </View>
   );
 };
 
+BlogScreen.navigationOptions =(props)=>{
+  const id = props.navigation.getParam("id");
+
+  return {
+    headerRight: (
+      <TouchableOpacity onPress={() => props.navigation.navigate("Edit", { id })}>
+        <FontAwesome style={styles.headerIcon} name="edit" size={24} color="black" />
+      </TouchableOpacity>
+    )
+  }
+}
+
 const styles = StyleSheet.create({
-  container: {},
+  headerIcon: {
+    marginRight:20,
+  },
 });
+
+
 export default BlogScreen;

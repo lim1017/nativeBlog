@@ -8,9 +8,8 @@ import { Ionicons } from '@expo/vector-icons';
 
 const IndexScreen = (props) => {
   const context = useContext(Context);
-  const { state, addBlog, deleteBlog } = context;
+  const { state, addRandomBlog, deleteBlog } = context;
 
-  console.log(props);
 
   const renderListItem = (item) => {
     return (
@@ -33,10 +32,10 @@ const IndexScreen = (props) => {
   return (
     <View>
       <Text>Index Screen</Text>
-      <Button title="Add Blog" onPress={addBlog} />
+      <Button title="Add Random Blog" onPress={addRandomBlog} />
       <FlatList
         data={state}
-        keyExtractor={(blogPost) => blogPost.title}
+        keyExtractor={(blogPost) => blogPost.id}
         renderItem={({ item }) => renderListItem(item)}
       />
     </View>
